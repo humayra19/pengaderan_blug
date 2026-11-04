@@ -14,9 +14,9 @@ class DashboardController extends Controller
      *
      * Hitung jumlah pengajuan per status dalam satu query agregat (groupBy).
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        // Satu query agregat: SELECT status, COUNT(*) AS total … GROUP BY status
+        // Kartu ringkasan: selalu dari SEMUA data, tidak ikut filter pencarian
         $counts = MembershipApplication::query()
             ->selectRaw('status, COUNT(*) as total')
             ->groupBy('status')
@@ -29,12 +29,35 @@ class DashboardController extends Controller
             'rejected' => (int) ($counts['rejected'] ?? 0),
         ];
 
-        // Daftar pengajuan: urutan terbaru, 10 per halaman, eager-load user
-        $applications = MembershipApplication::with('user')
-            ->latest()
-            ->paginate(10);
+        // Parameter pencarian & filter
+        $q             = trim((string) $request->query('q', ''));
+        $status        = (string) $request->query('status', '');
+        $validStatuses = ['pending', 'approved', 'rejected'];
 
-        return view('admin.dashboard', compact('stats', 'applications'));
+        // Normalkan status yang tidak dikenal menjadi string kosong
+        if (! in_array($status, $validStatuses, true)) {
+            $status = '';
+        }
+
+        $query = MembershipApplication::with('user')->latest();
+
+        // Cari nama ATAU NIM via whereHas (binding aman, bukan string mentah)
+        if ($q !== '') {
+            $query->whereHas('user', function ($sub) use ($q) {
+                $sub->where('name', 'like', '%' . $q . '%')
+                    ->orWhere('nim', 'like', '%' . $q . '%');
+            });
+        }
+
+        // Filter status (nilai tidak valid sudah dinormalkan ke '' di atas)
+        if ($status !== '') {
+            $query->where('status', $status);
+        }
+
+        // withQueryString() agar parameter q & status ikut di tautan pagination
+        $applications = $query->paginate(10)->withQueryString();
+
+        return view('admin.dashboard', compact('stats', 'applications', 'q', 'status'));
     }
 
     /**

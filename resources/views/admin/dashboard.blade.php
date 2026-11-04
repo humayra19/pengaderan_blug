@@ -44,6 +44,36 @@
         </div>
 
         {{-- ============================================================
+             Pencarian & filter (US-10)
+        ================================================================ --}}
+        <form method="GET" action="{{ route('dashboard') }}" class="mb-3">
+            <div class="d-flex flex-wrap gap-2 align-items-center">
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ $q }}"
+                    class="form-control"
+                    style="max-width: 240px;"
+                    placeholder="Cari nama atau NIM…"
+                    autocomplete="off"
+                >
+
+                <select name="status" class="form-select" style="max-width: 180px;">
+                    <option value="" {{ $status === '' ? 'selected' : '' }}>Semua status</option>
+                    <option value="pending"  {{ $status === 'pending'  ? 'selected' : '' }}>Menunggu</option>
+                    <option value="approved" {{ $status === 'approved' ? 'selected' : '' }}>Diterima</option>
+                    <option value="rejected" {{ $status === 'rejected' ? 'selected' : '' }}>Ditolak</option>
+                </select>
+
+                <button type="submit" class="btn btn-primary">Terapkan</button>
+
+                @if ($q !== '' || $status !== '')
+                    <a href="{{ route('dashboard') }}" class="btn btn-outline-dark">Reset</a>
+                @endif
+            </div>
+        </form>
+
+        {{-- ============================================================
              Tabel pengajuan (US-09)
         ================================================================ --}}
         <div class="card">
@@ -97,7 +127,11 @@
                         @empty
                             <tr>
                                 <td colspan="7" class="text-center text-secondary py-4">
-                                    Belum ada pengajuan.
+                                    @if ($q !== '' || $status !== '')
+                                        Tidak ada pengajuan yang cocok.
+                                    @else
+                                        Belum ada pengajuan.
+                                    @endif
                                 </td>
                             </tr>
                         @endforelse
