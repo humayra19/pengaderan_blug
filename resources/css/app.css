@@ -326,3 +326,93 @@ a:not(.btn):not(.tab-link):not(.navbar-brand):not(.nav-link):hover {
   border: 1px solid var(--blug-ink);
   border-radius: 10px;
 }
+
+/* kartu status pengajuan */
+.card-status {
+  background: var(--blug-surface);
+  border: 1px solid var(--blug-line);
+  border-radius: 10px;
+  border-left: 4px solid var(--blug-line);
+  box-shadow: none;
+  padding: 1.5rem;
+  min-width: 0;
+}
+
+.card-status-pending  { border-left-color: var(--blug-accent); }
+.card-status-approved { border-left-color: var(--blug-ok); }
+.card-status-rejected { border-left-color: var(--blug-danger); }
+
+/* ---- Daftar detail label+nilai (ringkasan pengajuan, dll.) ---- */
+.detail-list {
+  margin: 0;
+}
+
+.detail-row {
+  display: grid;
+  grid-template-columns: 1fr;    /* mobile: satu kolom */
+  gap: 0.25rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--blug-line);
+}
+
+.detail-row:last-child {
+  border-bottom: 0;
+}
+
+/* Reset semua margin/padding/border bawaan Bootstrap pada dt & dd */
+.detail-row dt,
+.detail-row dd {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.detail-row dt {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--blug-muted);
+  line-height: 1.5;
+}
+
+.detail-row dd {
+  font-size: 1rem;
+  color: var(--blug-ink);
+  line-height: 1.5;
+  min-width: 0;
+}
+
+/* >= 576px: dua kolom, baseline sejajar */
+@media (min-width: 576px) {
+  .detail-row {
+    grid-template-columns: 160px 1fr;
+    gap: 1rem;
+    align-items: baseline;
+  }
+}
+
+/* Varian satu kolom untuk teks panjang (motivasi, pengalaman, catatan admin).
+   Berlaku di semua lebar layar — tidak memakai grid 160px. */
+.detail-row-block {
+  grid-template-columns: 1fr !important;
+  gap: 0.5rem !important;
+  align-items: start !important;
+}
+
+/* ---- Blok teks panjang (motivasi, pengalaman, catatan admin) ---- */
+.text-block {
+  background: var(--blug-bg);
+  border: 1px solid var(--blug-line);
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  min-width: 0;
+}
+
+/* ---- Utilitas teks panjang (bisa dipakai ulang di modal dll.) ---- */
+.wrap-text {
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}

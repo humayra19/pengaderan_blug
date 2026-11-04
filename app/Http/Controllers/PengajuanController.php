@@ -25,12 +25,29 @@ class PengajuanController extends Controller
 
     /**
      * Simpan pengajuan keanggotaan baru.
+     *
+     * Aturan server: tolak bila pengguna sudah punya pengajuan dengan status
+     * pending atau approved — tidak cukup menyembunyikan tombol di tampilan.
      */
     public function store(StoreMembershipApplicationRequest $request): RedirectResponse
     {
-        DB::transaction(function () use ($request) {
-            $user = $request->user();
+        $user = $request->user();
 
+        // Cek keberadaan pengajuan aktif (pending atau approved) di sisi server.
+        $activeApplication = $user->applications()
+            ->whereIn('status', ['pending', 'approved'])
+            ->latest()
+            ->first();
+
+        if ($activeApplication) {
+            $pesan = $activeApplication->status === 'approved'
+                ? 'Pengajuan Anda sudah diterima. Anda tidak dapat mengajukan kembali.'
+                : 'Pengajuan Anda sedang dalam proses peninjauan. Silakan tunggu hasilnya.';
+
+            return redirect()->route('pengajuan.index')->with('error', $pesan);
+        }
+
+        DB::transaction(function () use ($request, $user) {
             // 1. Simpan data profil ke tabel users
             $user->update([
                 'nim' => $request->nim,

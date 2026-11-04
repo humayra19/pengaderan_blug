@@ -95,7 +95,10 @@ class MembershipApplicationTest extends TestCase
         $response = $this->actingAs($user)->get(route('pengajuan.index'));
 
         $response->assertStatus(200);
-        $response->assertSee('Pengajuan terkirim');
+        // Kartu status pending tampil
+        $response->assertSee('Menunggu');
+        $response->assertSee('Pengajuan sedang ditinjau');
+        // Form tidak tampil
         $response->assertDontSee('Kirim Pengajuan');
     }
 
