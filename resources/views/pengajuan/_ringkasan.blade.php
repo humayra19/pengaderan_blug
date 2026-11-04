@@ -10,9 +10,9 @@
 {{-- ==============================
      Bagian 1: Data pendaftar
 ================================= --}}
-<h3 class="mb-0" style="font-size: 1.125rem; font-weight: 700;">Data pendaftar</h3>
+<h3 class="detail-heading">Data pendaftar</h3>
 
-<dl class="detail-list mt-2">
+<dl class="detail-list mt-2 mb-0">
     <div class="detail-row">
         <dt>Nama lengkap</dt>
         <dd>{{ $user->name }}</dd>
@@ -42,9 +42,9 @@
 {{-- ==============================
      Bagian 2: Isi pengajuan
 ================================= --}}
-<h3 class="mb-0 mt-0" style="font-size: 1.125rem; font-weight: 700; border-top: 1px solid var(--blug-line); padding-top: 1.25rem; margin-top: 1.75rem !important;">Isi pengajuan</h3>
+<h3 class="detail-heading detail-heading-next">Isi pengajuan</h3>
 
-<dl class="detail-list mt-2">
+<dl class="detail-list mt-2 mb-0">
     {{-- Bidang minat: nilai pendek, cukup dua kolom biasa --}}
     <div class="detail-row">
         <dt>Bidang minat</dt>

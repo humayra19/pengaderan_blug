@@ -461,3 +461,41 @@ a:not(.btn):not(.tab-link):not(.navbar-brand):not(.nav-link):hover {
   overflow-wrap: anywhere;
   word-break: break-word;
 }
+
+/* ---- Modal detail pengajuan (US-11) ---- */
+.modal-content {
+  border: 1px solid var(--blug-ink);
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(20, 20, 20, 0.18);
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--blug-line);
+  padding: 1.25rem 1.5rem;
+}
+
+.modal-footer {
+  border-top: 1px solid var(--blug-line);
+  padding: 1rem 1.5rem;
+}
+
+.modal-body {
+  padding: 1.25rem 1.5rem;
+}
+
+/* Judul bagian pada ringkasan pengajuan & modal detail */
+.detail-heading {
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: -0.01em;
+  color: var(--blug-ink);
+  margin: 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--blug-line);
+}
+
+.detail-heading-next {
+  margin-top: 1.75rem;
+}
