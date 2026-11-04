@@ -98,4 +98,31 @@ class AuthenticationTest extends TestCase
         $this->assertGuest();
         $response->assertRedirect('/');
     }
+
+    public function test_after_logout_user_is_redirected_to_beranda_and_cannot_access_pengajuan(): void
+    {
+        $user = User::factory()->create(['role' => 'user']);
+
+        $logoutResponse = $this->actingAs($user)->post('/logout');
+
+        $this->assertGuest();
+        $logoutResponse->assertRedirect('/');
+
+        $pengajuanResponse = $this->get('/pengajuan');
+        $pengajuanResponse->assertRedirect('/login');
+    }
+
+    public function test_navbar_has_logout_button_with_post_form_for_authenticated_users(): void
+    {
+        $user = User::factory()->create(['role' => 'user']);
+
+        $response = $this->actingAs($user)->get('/');
+
+        $response->assertStatus(200);
+        $response->assertSee('action="'.route('logout').'"', false);
+        $response->assertSee('method="POST"', false);
+        $response->assertSee('type="submit"', false);
+        $response->assertSee('Keluar');
+        $response->assertDontSee('href="'.route('logout').'"', false);
+    }
 }
