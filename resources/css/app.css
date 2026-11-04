@@ -299,6 +299,28 @@ a:not(.btn):not(.tab-link):not(.navbar-brand):not(.nav-link):hover {
 .status-approved { background: var(--blug-ok-soft);     color: var(--blug-ok); }
 .status-rejected { background: var(--blug-danger-soft); color: var(--blug-danger); }
 
+/* alerts */
+.alert-success {
+  background-color: var(--blug-ok-soft);
+  color: var(--blug-ok);
+  border: 1px solid var(--blug-ok);
+  border-radius: 6px;
+}
+
+.alert-info, .alert-warning {
+  background-color: var(--blug-accent-soft);
+  color: var(--blug-accent-ink);
+  border: 1px solid var(--blug-accent);
+  border-radius: 6px;
+}
+
+.alert-danger {
+  background-color: var(--blug-danger-soft);
+  color: var(--blug-danger);
+  border: 1px solid var(--blug-danger);
+  border-radius: 6px;
+}
+
 /* modal */
 .modal-content {
   border: 1px solid var(--blug-ink);
