@@ -32,8 +32,7 @@ class BerandaTest extends TestCase
 
     public function test_daftar_sekarang_links_to_pengajuan_for_authenticated_regular_user(): void
     {
-        $user = User::factory()->create();
-        $user->role = 'user';
+        $user = User::factory()->create(['role' => 'user']);
 
         $response = $this->actingAs($user)->get(route('beranda'));
 
@@ -44,8 +43,7 @@ class BerandaTest extends TestCase
 
     public function test_daftar_sekarang_links_to_dashboard_for_authenticated_admin(): void
     {
-        $admin = User::factory()->create();
-        $admin->role = 'admin';
+        $admin = User::factory()->create(['role' => 'admin']);
 
         $response = $this->actingAs($admin)->get(route('beranda'));
 
@@ -54,17 +52,16 @@ class BerandaTest extends TestCase
         $response->assertDontSee(route('register'));
     }
 
-    public function test_pengajuan_and_dashboard_placeholder_routes_are_accessible(): void
+    public function test_pengajuan_and_dashboard_placeholder_routes_are_accessible_by_respective_roles(): void
     {
-        $user = User::factory()->create();
-
+        $user = User::factory()->create(['role' => 'user']);
         $responsePengajuan = $this->actingAs($user)->get(route('pengajuan.index'));
         $responsePengajuan->assertStatus(200);
         $responsePengajuan->assertSee('Pengajuan');
 
-        $responseDashboard = $this->actingAs($user)->get(route('dashboard'));
+        $admin = User::factory()->create(['role' => 'admin']);
+        $responseDashboard = $this->actingAs($admin)->get(route('dashboard'));
         $responseDashboard->assertStatus(200);
         $responseDashboard->assertSee('Dashboard');
     }
 }
-
