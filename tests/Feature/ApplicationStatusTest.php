@@ -135,8 +135,8 @@ class ApplicationStatusTest extends TestCase
         $response->assertDontSee('Kirim Pengajuan');
         $response->assertDontSee('Menunggu');
         $response->assertDontSee('Diterima');
-        // Tombol "Ajukan Ulang" belum dibuat (US-07)
-        $response->assertDontSee('Ajukan Ulang');
+        // Tombol "Ajukan Ulang" tersedia sejak US-07
+        $response->assertSee('Ajukan Ulang');
     }
 
     // ------------------------------------------------------------------ //

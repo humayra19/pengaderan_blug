@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreMembershipApplicationRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
@@ -11,16 +12,27 @@ class PengajuanController extends Controller
 {
     /**
      * Tampilkan formulir atau status pengajuan keanggotaan.
+     *
+     * ?ulang=1 hanya membuka form dengan isian lama bila pengajuan terakhir
+     * berstatus rejected. Pada keadaan lain parameter ini diabaikan.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $user = auth()->user();
+        $user              = auth()->user();
         $latestApplication = $user->latestApplication;
-        $interests = config('blug.interests', []);
-        $currentYear = (int) date('Y');
-        $batchYears = range($currentYear, $currentYear - 10);
+        $interests         = config('blug.interests', []);
+        $currentYear       = (int) date('Y');
+        $batchYears        = range($currentYear, $currentYear - 10);
 
-        return view('pengajuan.index', compact('user', 'latestApplication', 'interests', 'batchYears'));
+        // Prefill dari pengajuan lama hanya jika: rejected + ?ulang=1
+        $prefill = null;
+        if ($latestApplication?->status === 'rejected' && $request->query('ulang') === '1') {
+            $prefill = $latestApplication;
+        }
+
+        return view('pengajuan.index', compact(
+            'user', 'latestApplication', 'interests', 'batchYears', 'prefill'
+        ));
     }
 
     /**
@@ -50,21 +62,24 @@ class PengajuanController extends Controller
         DB::transaction(function () use ($request, $user) {
             // 1. Simpan data profil ke tabel users
             $user->update([
-                'nim' => $request->nim,
+                'nim'           => $request->nim,
                 'study_program' => $request->study_program,
-                'batch_year' => $request->batch_year,
-                'phone' => $request->phone,
+                'batch_year'    => $request->batch_year,
+                'phone'         => $request->phone,
             ]);
 
-            // 2. Buat baris baru di membership_applications dengan status pending
+            // 2. Buat baris BARU di membership_applications dengan status pending.
+            //    Baris lama (riwayat) tetap ada dan tidak diubah.
             $user->applications()->create([
-                'interest' => $request->interest,
+                'interest'   => $request->interest,
                 'motivation' => $request->motivation,
                 'experience' => $request->experience,
-                'status' => 'pending',
+                'status'     => 'pending',
             ]);
         });
 
-        return redirect()->route('pengajuan.index')->with('success', 'Pengajuan berhasil dikirim. Silakan tunggu peninjauan dari admin.');
+        return redirect()->route('pengajuan.index')
+            ->with('success', 'Pengajuan berhasil dikirim. Silakan tunggu peninjauan dari admin.');
     }
 }
+

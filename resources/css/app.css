@@ -321,6 +321,51 @@ a:not(.btn):not(.tab-link):not(.navbar-brand):not(.nav-link):hover {
   border-radius: 6px;
 }
 
+/* ---- Kartu ringkasan dashboard ---- */
+.stat-card {
+  background: var(--blug-surface);
+  border: 1px solid var(--blug-line);
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+}
+
+/* Kartu total: latar hitam, angka kuning */
+.stat-card-total {
+  background: var(--blug-ink);
+  border-color: var(--blug-ink);
+  color: #FAF7EC;
+}
+
+.stat-card-total .stat-label {
+  color: var(--blug-muted);
+}
+
+.stat-card-total .stat-value {
+  color: var(--blug-accent);
+}
+
+/* Tiga kartu lain: putih + garis atas 3px berwarna status */
+.stat-card-pending  { border-top: 3px solid var(--blug-accent); }
+.stat-card-approved { border-top: 3px solid var(--blug-ok); }
+.stat-card-rejected { border-top: 3px solid var(--blug-danger); }
+
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--blug-muted);
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--blug-ink);
+}
+
 /* modal */
 .modal-content {
   border: 1px solid var(--blug-ink);

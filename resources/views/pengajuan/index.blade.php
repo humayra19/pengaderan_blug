@@ -25,9 +25,17 @@
             @php $status = $latestApplication?->status; @endphp
 
             {{-- ============================================================
-                 KEADAAN 1: belum pernah mengajukan → tampilkan form
+                 KEADAAN FORM: belum pernah mengajukan, ATAU rejected+?ulang=1
             ================================================================ --}}
-            @if (! $latestApplication)
+            @if (! $latestApplication || $prefill)
+                {{-- Jika mengajukan ulang, tampilkan header konteks --}}
+                @if ($prefill)
+                    <div class="alert alert-info mb-4" role="alert">
+                        Formulir diisi dengan data pengajuan sebelumnya sebagai nilai awal.
+                        Anda bisa mengubah isian sebelum mengirim kembali.
+                    </div>
+                @endif
+
                 <div class="card p-4">
                     {{-- Informasi Akun (Hanya Baca) --}}
                     <div class="row g-3 mb-3">
@@ -107,7 +115,12 @@
                                 class="form-select @error('interest') is-invalid @enderror" required>
                                 <option value="">Pilih Bidang Minat</option>
                                 @foreach ($interests as $item)
-                                    <option value="{{ $item }}" {{ old('interest') === $item ? 'selected' : '' }}>
+                                    {{--
+                                        Prioritas: old() (setelah validasi gagal) →
+                                        $prefill (isian pengajuan lama saat ulang) → kosong
+                                    --}}
+                                    <option value="{{ $item }}"
+                                        {{ old('interest', $prefill?->interest) === $item ? 'selected' : '' }}>
                                         {{ $item }}
                                     </option>
                                 @endforeach
@@ -123,7 +136,7 @@
                             <textarea id="motivation" name="motivation" rows="4"
                                 class="form-control @error('motivation') is-invalid @enderror"
                                 placeholder="Jelaskan alasan dan motivasimu ingin bergabung dengan BLUG (50 - 1000 karakter)"
-                                required>{{ old('motivation') }}</textarea>
+                                required>{{ old('motivation', $prefill?->motivation) }}</textarea>
                             <div class="form-text text-secondary small">50 sampai 1000 karakter</div>
                             @error('motivation')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -139,7 +152,7 @@
                             <textarea id="experience" name="experience" rows="3"
                                 class="form-control @error('experience') is-invalid @enderror"
                                 placeholder="Ceritakan pengalaman teknis, organisasi, atau keterampilan yang kamu miliki"
-                            >{{ old('experience') }}</textarea>
+                            >{{ old('experience', $prefill?->experience) }}</textarea>
                             <div class="form-text text-secondary small">Maksimal 1000 karakter</div>
                             @error('experience')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -244,7 +257,12 @@
                         </p>
                     @endif
 
-                    {{-- Tombol "Ajukan Ulang" dikerjakan di US-07, tidak dibuat di sini --}}
+                    {{-- Tombol "Ajukan Ulang" --}}
+                    <div class="mt-4">
+                        <a href="{{ route('pengajuan.index', ['ulang' => '1']) }}" class="btn btn-outline-dark">
+                            Ajukan Ulang
+                        </a>
+                    </div>
                 </div>
             @endif
 
