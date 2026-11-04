@@ -1,3 +1,259 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+:root {
+  --blug-bg: #FAF7EC;
+  --blug-surface: #FFFFFF;
+  --blug-ink: #141414;
+  --blug-muted: #5C584B;
+  --blug-line: #E6E0CC;
+  --blug-accent: #F5C518;
+  --blug-accent-dark: #E0B000;
+  --blug-accent-soft: #FFF4C2;
+  --blug-accent-ink: #6B5000;
+  --blug-ok: #4F5A14;
+  --blug-ok-soft: #EEF1D6;
+  --blug-danger: #9C3A1E;
+  --blug-danger-soft: #F9E3DA;
+
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* timpa variabel Bootstrap */
+  --bs-body-font-family: var(--font-sans);
+  --bs-body-bg: var(--blug-bg);
+  --bs-body-color: var(--blug-ink);
+  --bs-secondary-color: var(--blug-muted);
+  --bs-border-color: var(--blug-line);
+  --bs-border-radius: 6px;
+  --bs-border-radius-lg: 10px;
+  --bs-link-color: var(--blug-ink);
+  --bs-link-hover-color: var(--blug-ink);
+  --bs-primary: var(--blug-accent);
+  --bs-primary-rgb: 245, 197, 24;
+}
+
+body {
+  line-height: 1.65;
+  font-family: var(--font-sans);
+  background-color: var(--blug-bg);
+  color: var(--blug-ink);
+}
+
+h1, h2, h3, h4 {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.container {
+  max-width: 1080px;
+}
+
+.container-narrow {
+  max-width: 560px;
+  margin-inline: auto;
+}
+
+/* tautan: hitam, garis bawah, hover berlatar kuning */
+a:not(.btn) {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+a:not(.btn):hover {
+  background: var(--blug-accent);
+  text-decoration-color: transparent;
+}
+
+/* sorotan kata di judul (marker kuning) */
+.mark-yellow {
+  background: linear-gradient(transparent 55%, var(--blug-accent) 55%);
+  padding: 0 0.1em;
+}
+
+/* label kecil gaya terminal */
+.label-mono {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--blug-muted);
+}
+
+/* teks monospace angka dan aksen */
+.step-number {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--blug-accent);
+  font-size: 2.25rem;
+  line-height: 1;
+}
+
+/* jarak antar bagian beranda: 80px di desktop, 56px di mobile */
+.section-spacing {
+  padding-block: 80px;
+}
+
+@media (max-width: 767.98px) {
+  .section-spacing {
+    padding-block: 56px;
+  }
+}
+
+/* tombol */
+.btn {
+  border-radius: 6px;
+  font-weight: 700;
+  padding: 0.55rem 1.1rem;
+}
+
+.btn-primary {
+  --bs-btn-color: var(--blug-ink);
+  --bs-btn-bg: var(--blug-accent);
+  --bs-btn-border-color: var(--blug-ink);
+  --bs-btn-hover-color: var(--blug-ink);
+  --bs-btn-hover-bg: var(--blug-accent-dark);
+  --bs-btn-hover-border-color: var(--blug-ink);
+  --bs-btn-active-color: var(--blug-ink);
+  --bs-btn-active-bg: var(--blug-accent-dark);
+  --bs-btn-active-border-color: var(--blug-ink);
+  --bs-btn-focus-shadow-rgb: 20, 20, 20;
+}
+
+.btn-outline-dark {
+  --bs-btn-color: var(--blug-ink);
+  --bs-btn-border-color: var(--blug-ink);
+  --bs-btn-hover-color: var(--blug-accent);
+  --bs-btn-hover-bg: var(--blug-ink);
+  --bs-btn-hover-border-color: var(--blug-ink);
+}
+
+/* navbar dan footer gelap */
+.navbar-blug, .footer-blug {
+  background: var(--blug-ink);
+  color: #FAF7EC;
+}
+
+.navbar-blug {
+  min-height: 64px;
+  --bs-navbar-color: #FAF7EC;
+  --bs-navbar-hover-color: var(--blug-accent);
+  --bs-navbar-active-color: var(--blug-accent);
+  --bs-navbar-brand-color: var(--blug-accent);
+  --bs-navbar-brand-hover-color: var(--blug-accent);
+}
+
+.navbar-blug a:not(.btn), .footer-blug a:not(.btn) {
+  color: #FAF7EC;
+  text-decoration: none;
+}
+
+.navbar-blug a:not(.btn):hover, .footer-blug a:not(.btn):hover {
+  background: transparent;
+  color: var(--blug-accent);
+}
+
+.navbar-blug .nav-link {
+  color: #FAF7EC;
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+}
+
+.navbar-blug .nav-link:hover {
+  color: var(--blug-accent);
+}
+
+.navbar-blug .nav-link.active {
+  color: var(--blug-accent) !important;
+  box-shadow: inset 0 -2px 0 var(--blug-accent);
+}
+
+.navbar-blug .btn-outline-light {
+  --bs-btn-color: #FAF7EC;
+  --bs-btn-border-color: var(--blug-muted);
+  --bs-btn-hover-color: var(--blug-ink);
+  --bs-btn-hover-bg: var(--blug-accent);
+  --bs-btn-hover-border-color: var(--blug-accent);
+}
+
+.brand-blug {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  color: var(--blug-accent) !important;
+}
+
+/* kartu */
+.card {
+  background: var(--blug-surface);
+  border: 1px solid var(--blug-line);
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+/* form */
+.form-label {
+  font-weight: 500;
+  font-size: 0.875rem;
+  margin-bottom: 0.35rem;
+}
+
+.form-control, .form-select {
+  border-color: #CFC8AE;
+  border-radius: 6px;
+  padding: 0.6rem 0.8rem;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--blug-ink);
+  box-shadow: 0 0 0 3px rgba(245, 197, 24, 0.55);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--blug-ink);
+  outline-offset: 2px;
+}
+
+/* tabel */
+.table {
+  --bs-table-bg: transparent;
+  font-size: 0.9375rem;
+}
+
+.table thead th {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--blug-muted);
+  border-bottom: 2px solid var(--blug-ink);
+}
+
+.table td {
+  vertical-align: middle;
+  border-color: var(--blug-line);
+}
+
+.table-hover > tbody > tr:hover > * {
+  --bs-table-hover-bg: var(--blug-accent-soft);
+}
+
+/* badge status */
+.status {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+}
+
+.status-pending  { background: var(--blug-accent-soft); color: var(--blug-accent-ink); }
+.status-approved { background: var(--blug-ok-soft);     color: var(--blug-ok); }
+.status-rejected { background: var(--blug-danger-soft); color: var(--blug-danger); }
+
+/* modal */
+.modal-content {
+  border: 1px solid var(--blug-ink);
+  border-radius: 10px;
+}
