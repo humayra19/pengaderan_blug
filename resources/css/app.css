@@ -54,12 +54,12 @@ h1, h2, h3, h4 {
 }
 
 /* tautan: hitam, garis bawah, hover berlatar kuning */
-a:not(.btn) {
+a:not(.btn):not(.tab-link):not(.navbar-brand):not(.nav-link) {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
-a:not(.btn):hover {
+a:not(.btn):not(.tab-link):not(.navbar-brand):not(.nav-link):hover {
   background: var(--blug-accent);
   text-decoration-color: transparent;
 }
@@ -211,6 +211,53 @@ a:not(.btn):hover {
 .btn:focus-visible {
   outline: 2px solid var(--blug-ink);
   outline-offset: 2px;
+}
+
+/* kartu auth & tab login/daftar */
+.auth-card {
+  max-width: 420px;
+  width: 100%;
+  margin-inline: auto;
+}
+
+.tabs-blug {
+  display: flex;
+  gap: 1.5rem;
+  border-bottom: 2px solid var(--blug-line);
+  margin-bottom: 1.25rem;
+}
+
+.tabs-blug .tab-link {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: var(--blug-muted);
+  text-decoration: none !important;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  display: inline-block;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.tabs-blug .tab-link:hover {
+  background: transparent !important;
+  color: var(--blug-ink);
+}
+
+.tabs-blug .tab-link.active {
+  color: var(--blug-ink);
+  border-bottom: 3px solid var(--blug-accent);
+}
+
+.form-check-input:checked {
+  background-color: var(--blug-ink);
+  border-color: var(--blug-ink);
+}
+
+.form-check-input:focus {
+  border-color: var(--blug-ink);
+  box-shadow: 0 0 0 3px rgba(245, 197, 24, 0.55);
 }
 
 /* tabel */
