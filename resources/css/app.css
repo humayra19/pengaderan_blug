@@ -128,6 +128,18 @@ a:not(.btn):not(.tab-link):not(.navbar-brand):not(.nav-link):hover {
   --bs-btn-hover-border-color: var(--blug-ink);
 }
 
+.btn-outline-danger {
+  --bs-btn-color: var(--blug-danger);
+  --bs-btn-border-color: var(--blug-danger);
+  --bs-btn-hover-color: var(--blug-danger);
+  --bs-btn-hover-bg: var(--blug-danger-soft);
+  --bs-btn-hover-border-color: var(--blug-danger);
+  --bs-btn-active-color: var(--blug-danger);
+  --bs-btn-active-bg: var(--blug-danger-soft);
+  --bs-btn-active-border-color: var(--blug-danger);
+  --bs-btn-focus-shadow-rgb: 156, 58, 30;
+}
+
 /* navbar dan footer gelap */
 .navbar-blug, .footer-blug {
   background: var(--blug-ink);

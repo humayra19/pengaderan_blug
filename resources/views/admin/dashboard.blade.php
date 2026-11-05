@@ -2,7 +2,14 @@
     <div class="container py-5">
 
         {{-- Judul --}}
-        <h1 class="h2 fw-bold mb-5">Dashboard</h1>
+        <h1 class="h2 fw-bold mb-4">Dashboard</h1>
+
+        {{-- Flash: sukses --}}
+        @if (session('success'))
+            <div class="alert alert-success mb-4" role="alert">
+                {{ session('success') }}
+            </div>
+        @endif
 
         {{-- ============================================================
              Kartu ringkasan: Total | Menunggu | Diterima | Ditolak
@@ -163,13 +170,22 @@
     </div>
 
     {{-- ============================================================
-         Modal detail pengajuan (US-11)
+         Modal detail pengajuan (US-11 & US-12)
          Satu modal bersama; diisi JS dari atribut data-* tiap tombol.
     ================================================================ --}}
     <div class="modal fade" id="applicationModal" tabindex="-1"
-         aria-labelledby="applicationModalLabel" aria-modal="true" role="dialog">
+         aria-labelledby="applicationModalLabel" aria-modal="true" role="dialog"
+         data-has-errors="{{ $errors->any() ? 'true' : 'false' }}"
+         data-error-app-id="{{ old('application_id') }}">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
-            <div class="modal-content">
+            {{-- Form Keputusan (US-12) sebagai modal-content agar scrollable flexbox Bootstrap bekerja normal --}}
+            <form id="decisionForm" method="POST" action="" class="modal-content">
+                @csrf
+                @method('PATCH')
+                <input type="hidden" name="application_id" id="decisionAppId" value="{{ old('application_id') }}">
+                <input type="hidden" name="q" value="{{ $q }}">
+                <input type="hidden" name="status" value="{{ $status }}">
+                <input type="hidden" name="page" value="{{ request('page') }}">
 
                 {{-- Header --}}
                 <div class="modal-header">
@@ -183,80 +199,109 @@
                 {{-- Body --}}
                 <div class="modal-body">
 
-                    {{-- ---- Data pendaftar ---- --}}
-                    <h3 class="detail-heading">Data pendaftar</h3>
-                    <dl class="detail-list mt-2 mb-0">
-                        <div class="detail-row">
-                            <dt>Nama</dt>
-                            <dd data-modal="name"></dd>
-                        </div>
-                        <div class="detail-row">
-                            <dt>Email</dt>
-                            <dd data-modal="email"></dd>
-                        </div>
-                        <div class="detail-row">
-                            <dt>NIM</dt>
-                            <dd data-modal="nim" style="font-family: var(--font-mono); font-size: 0.875rem;"></dd>
-                        </div>
-                        <div class="detail-row">
-                            <dt>Program studi</dt>
-                            <dd data-modal="study-program"></dd>
-                        </div>
-                        <div class="detail-row">
-                            <dt>Angkatan</dt>
-                            <dd data-modal="batch" style="font-family: var(--font-mono); font-size: 0.875rem;"></dd>
-                        </div>
-                        <div class="detail-row">
-                            <dt>WhatsApp</dt>
-                            <dd data-modal="whatsapp"></dd>
-                        </div>
-                    </dl>
+                        {{-- ---- Data pendaftar ---- --}}
+                        <h3 class="detail-heading">Data pendaftar</h3>
+                        <dl class="detail-list mt-2 mb-0">
+                            <div class="detail-row">
+                                <dt>Nama</dt>
+                                <dd data-modal="name"></dd>
+                            </div>
+                            <div class="detail-row">
+                                <dt>Email</dt>
+                                <dd data-modal="email"></dd>
+                            </div>
+                            <div class="detail-row">
+                                <dt>NIM</dt>
+                                <dd data-modal="nim" style="font-family: var(--font-mono); font-size: 0.875rem;"></dd>
+                            </div>
+                            <div class="detail-row">
+                                <dt>Program studi</dt>
+                                <dd data-modal="study-program"></dd>
+                            </div>
+                            <div class="detail-row">
+                                <dt>Angkatan</dt>
+                                <dd data-modal="batch" style="font-family: var(--font-mono); font-size: 0.875rem;"></dd>
+                            </div>
+                            <div class="detail-row">
+                                <dt>WhatsApp</dt>
+                                <dd data-modal="whatsapp"></dd>
+                            </div>
+                        </dl>
 
-                    {{-- ---- Isi pengajuan ---- --}}
-                    <h3 class="detail-heading detail-heading-next">Isi pengajuan</h3>
-                    <dl class="detail-list mt-2 mb-0">
-                        <div class="detail-row">
-                            <dt>Bidang minat</dt>
-                            <dd data-modal="interest"></dd>
-                        </div>
-                        <div class="detail-row detail-row-block">
-                            <dt>Motivasi</dt>
-                            <dd>
-                                <div class="text-block wrap-text" data-modal="motivation"></div>
-                            </dd>
-                        </div>
-                        <div class="detail-row detail-row-block">
-                            <dt>Pengalaman</dt>
-                            <dd>
-                                <div class="text-block wrap-text" data-modal="experience"></div>
-                            </dd>
-                        </div>
-                        <div class="detail-row">
-                            <dt>Tanggal masuk</dt>
-                            <dd data-modal="created-at" style="font-family: var(--font-mono); font-size: 0.875rem;"></dd>
-                        </div>
-                        <div class="detail-row">
-                            <dt>Status</dt>
-                            <dd><span class="status" data-modal="status"></span></dd>
-                        </div>
-                    </dl>
+                        {{-- ---- Isi pengajuan ---- --}}
+                        <h3 class="detail-heading detail-heading-next">Isi pengajuan</h3>
+                        <dl class="detail-list mt-2 mb-0">
+                            <div class="detail-row">
+                                <dt>Bidang minat</dt>
+                                <dd data-modal="interest"></dd>
+                            </div>
+                            <div class="detail-row detail-row-block">
+                                <dt>Motivasi</dt>
+                                <dd>
+                                    <div class="text-block wrap-text" data-modal="motivation"></div>
+                                </dd>
+                            </div>
+                            <div class="detail-row detail-row-block">
+                                <dt>Pengalaman</dt>
+                                <dd>
+                                    <div class="text-block wrap-text" data-modal="experience"></div>
+                                </dd>
+                            </div>
+                            <div class="detail-row">
+                                <dt>Tanggal masuk</dt>
+                                <dd data-modal="created-at" style="font-family: var(--font-mono); font-size: 0.875rem;"></dd>
+                            </div>
+                            <div class="detail-row">
+                                <dt>Status</dt>
+                                <dd><span class="status" data-modal="status"></span></dd>
+                            </div>
+                        </dl>
 
-                    {{-- ---- Catatan admin (disembunyikan bila kosong) ---- --}}
-                    <div data-modal-row="admin-note" hidden>
-                        <h3 class="detail-heading detail-heading-next">Catatan admin</h3>
-                        <div class="text-block wrap-text mt-2" data-modal="admin-note"></div>
+                        {{-- Kompatibilitas elemen catatan admin lama untuk selektor test --}}
+                        <div data-modal-row="admin-note" class="d-none">
+                            <span data-modal="admin-note"></span>
+                        </div>
+
+                        {{-- ---- Keputusan Admin (US-12) ---- --}}
+                        <h3 class="detail-heading detail-heading-next">Keputusan</h3>
+                        <div class="mt-2">
+                            <label for="adminNoteInput" class="form-label">
+                                Catatan admin
+                                <span class="text-secondary small fw-normal">(Wajib saat menolak)</span>
+                            </label>
+                            <textarea
+                                name="admin_note"
+                                id="adminNoteInput"
+                                rows="3"
+                                class="form-control @error('admin_note') is-invalid @enderror"
+                                placeholder="Tulis catatan admin atau alasan penolakan…"
+                            >{{ old('admin_note') }}</textarea>
+                            @error('admin_note')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                            @error('decision')
+                                <div class="text-danger small mt-1">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                    </div>{{-- /modal-body --}}
+
+                    {{-- Footer --}}
+                    <div class="modal-footer d-flex justify-content-between align-items-center">
+                        <button type="button" class="btn btn-outline-dark"
+                                data-bs-dismiss="modal">Tutup</button>
+                        <div class="d-flex gap-2">
+                            <button type="submit" name="decision" value="rejected"
+                                    class="btn btn-outline-danger">
+                                Tolak
+                            </button>
+                            <button type="submit" name="decision" value="approved"
+                                    class="btn btn-primary">
+                                Terima
+                            </button>
+                        </div>
                     </div>
-
-                </div>{{-- /modal-body --}}
-
-                {{-- Footer --}}
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-dark"
-                            data-bs-dismiss="modal">Tutup</button>
-                    {{-- Area tombol Terima dan Tolak dikerjakan di US-12 --}}
-                </div>
-
-            </div>
+                </form>
         </div>
     </div>
 

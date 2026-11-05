@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateApplicationDecisionRequest;
 use App\Models\MembershipApplication;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -61,11 +62,42 @@ class DashboardController extends Controller
     }
 
     /**
-     * Perbarui keputusan pengajuan keanggotaan (dikerjakan di US-12).
+     * Perbarui keputusan pengajuan keanggotaan (US-12).
+     *
+     * Menyimpan status, admin_note, reviewed_by (admin yang login),
+     * dan reviewed_at (waktu saat ini). Admin dapat mengubah keputusan
+     * yang sudah dibuat sebelumnya (untuk koreksi).
      */
-    public function update(Request $request, string $application): RedirectResponse
+    public function update(UpdateApplicationDecisionRequest $request, string $application): RedirectResponse
     {
-        return redirect()->route('dashboard');
+        $app = MembershipApplication::find($application);
+        if (! $app) {
+            return redirect()->route('dashboard');
+        }
+
+        $decision = $request->validated('decision');
+        $note     = $request->validated('admin_note');
+
+        $app->update([
+            'status'      => $decision,
+            'admin_note'  => $note,
+            'reviewed_by' => $request->user()->id,
+            'reviewed_at' => now(),
+        ]);
+
+        // Pertahankan query pencarian, filter status, dan halaman pagination bila ada
+        $queryParams = array_filter([
+            'q'      => $request->input('q'),
+            'status' => $request->input('status'),
+            'page'   => $request->input('page'),
+        ], fn ($val) => $val !== null && $val !== '');
+
+        $label = $decision === 'approved' ? 'diterima' : 'ditolak';
+        $applicantName = $app->user ? $app->user->name : 'Pendaftar';
+
+        return redirect()
+            ->route('dashboard', $queryParams)
+            ->with('success', "Pengajuan atas nama {$applicantName} berhasil {$label}.");
     }
 }
 
